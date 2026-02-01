@@ -4,7 +4,16 @@ export default function HadithDisplay({ data, showArabic }) {
   if (!data) {
     return <div className={styles.error}>No data available</div>;
   }
-
+  // HANDLE LOADING STATE
+  if (data.status === 'loading') {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.loadingSpinner}></div>
+        <p>{data.message}</p>
+        <p className={styles.loadingHint}>This may take 10-20 seconds...</p>
+      </div>
+    );
+  }
   if (data.status === 'error') {
     return (
       <div className={styles.error}>

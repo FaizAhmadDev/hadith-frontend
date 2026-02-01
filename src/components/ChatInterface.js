@@ -20,36 +20,55 @@ export default function ChatInterface({ showArabic }) {
   }, [messages]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!input.trim() || loading) return;
+  e.preventDefault();
+  
+  if (!input.trim() || loading) return;
 
-    const userMessage = input.trim();
-    setInput('');
+  const userMessage = input.trim();
+  setInput('');
+  
+  // Add user message
+  setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+  
+  // Add loading message
+  setMessages(prev => [...prev, { 
+    role: 'assistant', 
+    content: { status: 'loading', message: '🔍 Searching hadith database...' }
+  }]);
+  
+  setLoading(true);
+  
+  try {
+    console.log('📤 Sending query:', userMessage);
     
-    // Add user message
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    const response = await queryAPI(userMessage, showArabic);
     
-    setLoading(true);
+    console.log('📥 Received response:', response);
     
-    try {
-      const response = await queryAPI(userMessage, showArabic);
-      
-      // Add bot response
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-      
-    } catch (error) {
-      setMessages(prev => [...prev, {
+    // Remove loading message and add actual response
+    setMessages(prev => {
+      const withoutLoading = prev.slice(0, -1);
+      return [...withoutLoading, { role: 'assistant', content: response }];
+    });
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+    
+    // Remove loading message and show error
+    setMessages(prev => {
+      const withoutLoading = prev.slice(0, -1);
+      return [...withoutLoading, {
         role: 'assistant',
         content: {
           status: 'error',
-          message: 'Failed to get response. Please try again.'
+          message: error.message || 'Failed to get response. Please try again.'
         }
-      }]);
-    } finally {
-      setLoading(false);
-    }
-  };
+      }];
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const exampleQueries = [
     "What does Islam say about intentions?",
