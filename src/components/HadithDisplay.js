@@ -39,13 +39,6 @@ export default function HadithDisplay({ data, showArabic }) {
 
   return (
     <div className={styles.container}>
-      {/* Summary */}
-      {data.summary && (
-        <div className={styles.summary}>
-          <h3>📝 Summary</h3>
-          <p>{data.summary}</p>
-        </div>
-      )}
 
       {/* Main Hadith */}
       <div className={styles.hadithCard}>
