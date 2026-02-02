@@ -10,9 +10,9 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <Header showArabic={showArabic} setShowArabic={setShowArabic} />
+      <Header />
       <main className={styles.main}>
-        <ChatInterface showArabic={showArabic} />
+        <ChatInterface />
       </main>
       <footer className={styles.footer}>
         <p>

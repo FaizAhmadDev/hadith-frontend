@@ -40,11 +40,7 @@ export default function ChatInterface({ showArabic }) {
   
   try {
     console.log('📤 Sending query:', userMessage);
-    
-    const response = await queryAPI(userMessage, showArabic);
-    
-    console.log('📥 Received response:', response);
-    
+
     // Remove loading message and add actual response
     setMessages(prev => {
       const withoutLoading = prev.slice(0, -1);
